@@ -66,3 +66,30 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify public website and resume downloads
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const assert = require('assert/strict');
+          const crypto = require('crypto');
+          const hash = b => crypto.createHash('sha256').update(b).digest('hex');
+          (async () => {
+            const base = process.env.SITE_URL;
+            assert.ok(base && base.startsWith('https://'));
+            for (const [urlPath, localPath] of [['', 'index.html'], ['Liam_Chetrit_Resume.html', 'Liam_Chetrit_Resume.html'], ['Liam_Chetrit_Resume.pdf', 'Liam_Chetrit_Resume.pdf']]) {
+              let verified = false;
+              for (let attempt = 0; attempt < 6; attempt++) {
+                const response = await fetch(new URL(urlPath, base));
+                const bytes = Buffer.from(await response.arrayBuffer());
+                if (response.ok && hash(bytes) === hash(fs.readFileSync('dist/' + localPath))) { verified = true; break; }
+                await new Promise(resolve => setTimeout(resolve, 5000));
+              }
+              assert.ok(verified, 'Public file did not match deployed source: ' + urlPath);
+            }
+            console.log('PUBLIC_SITE_VERIFIED ' + base);
+            console.log('PUBLIC_RESUME_HTML_VERIFIED ' + new URL('Liam_Chetrit_Resume.html', base));
+            console.log('PUBLIC_RESUME_PDF_VERIFIED ' + new URL('Liam_Chetrit_Resume.pdf', base));
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
