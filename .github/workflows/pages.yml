@@ -57,6 +57,23 @@ jobs:
             await browser.close();
           })().catch(e => { console.error(e); process.exit(1); });
           NODE
+      - name: Render both resume versions
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox']});
+            for(const name of ['Liam_Chetrit_AI_Product_Manager','Liam_Chetrit_AI_PM_Builder']) {
+              const page = await browser.newPage();
+              await page.goto('file://' + process.cwd() + '/dist/' + name + '.html');
+              await page.emulateMedia({media:'print'});
+              await page.pdf({path:'dist/'+name+'.pdf',preferCSSPageSize:true,printBackground:true});
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
       - uses: actions/configure-pages@v5
         with:
           enablement: true
