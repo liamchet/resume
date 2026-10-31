@@ -4,7 +4,7 @@ const fs=require('fs');const path=require('path');const {build}=require('esbuild
  const js=result.outputFiles.find(f=>f.path.endsWith('.js')).text;
  const css=result.outputFiles.find(f=>f.path.endsWith('.css')).text;
  let html=fs.readFileSync(path.join(__dirname,'profile.template.html'),'utf8');
- html=html.replace('<!-- REACT_BITS_BUNDLE -->','<style>'+css+'</style><script>'+js.split('</script').join('<'+String.fromCharCode(92)+'/script')+'</script>');
+ html=html.replace('<!-- REACT_BITS_BUNDLE -->',()=>'<style>'+css+'</style><script>'+js.split('</script').join('<'+String.fromCharCode(92)+'/script')+'</script>');
  const root=path.resolve(__dirname,'../..');
  for(const folder of [root,path.join(root,'dist')]){fs.mkdirSync(folder,{recursive:true});for(const name of ['index.html','Liam_Chetrit_Profile.html'])fs.writeFileSync(path.join(folder,name),html);}
  fs.writeFileSync(path.join(root,'dist','THIRD_PARTY_NOTICES.txt'),fs.readFileSync(path.join(__dirname,'components','LICENSE-React-Bits.md')));
