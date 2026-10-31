@@ -46,7 +46,9 @@ jobs:
             assert.equal(await page.locator('.gallery-window img').count(), 10);
             assert.equal(await page.locator('.project-card').count(), 3);
             await page.waitForFunction(()=>document.querySelectorAll('.specular-button').length===3);
-            assert.equal(await page.locator('#motion-toggle').count(), 1);
+            assert.equal(await page.locator('#motion-toggle').count(), 0);
+            assert.match(await page.locator('h1').innerText(), /AI Solutions/);
+            assert.equal(await page.locator('.flow-icon').count(), 12);
             await page.locator('#gallery-pause').click();
             const startIndex=Number((await page.locator('#gallery-count').innerText()).slice(0,2));
             await page.locator('#gallery-next').click();
