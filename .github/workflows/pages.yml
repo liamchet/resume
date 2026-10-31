@@ -52,6 +52,9 @@ jobs:
             assert.equal(await page.locator('#career .career-company').count(),4);
             assert.equal(await page.locator('#career .career-role').count(),8);
             assert.equal(await page.locator('#community .career-role').count(),1);
+            assert.equal(await page.locator('#education .training-item').count(),4);
+            assert.match(await page.locator('#education .degree-card').innerText(),/B.A. in Economics/);
+            assert.doesNotMatch(await page.locator('#education .degree-card').innerText(),/Expected/);
             const roleSummary=page.locator('#career .career-role > summary').first();
             await roleSummary.focus();
             await page.keyboard.press('Enter');

@@ -27,4 +27,14 @@ function renderCommunity(resume){
  if(!section)throw Error('Missing community experience in resume');
  return [...section.matchAll(/<article class="position">([\s\S]*?)<\/article>/g)].map(m=>renderRole(role(m[1]))).join('');
 }
-module.exports={renderCareer,renderCommunity};
+function renderEducation(resume){
+ const section=resume.match(/<section class="education"><h2>Education<\/h2>([\s\S]*?)<\/section>/)?.[1];
+ const training=resume.match(/<section class="education"><h2>Professional Training &amp; Certifications<\/h2>([\s\S]*?)<\/section>/)?.[1];
+ if(!section||!training)throw Error('Missing education or training in resume');
+ const degree=section.match(/<p><strong>([\s\S]*?)<\/strong>\s*\|\s*([\s\S]*?)\|\s*([^<]+)<\/p>/);
+ if(!degree)throw Error('Degree format not recognized');
+ const courses=[...training.matchAll(/<p><strong>([\s\S]*?)<\/strong>\s*\|\s*([\s\S]*?)\|\s*([^<]+)<\/p>/g)];
+ if(!courses.length)throw Error('No training found');
+ return '<div class="education-grid"><article class="degree-card"><span class="education-kind">Economist</span><h3>'+degree[1]+'</h3><p>'+degree[2].trim()+'</p><span class="education-year">'+degree[3].trim()+'</span></article><div class="training-list"><h3>Professional training</h3>'+courses.map(c=>'<article class="training-item"><div><h4>'+c[1]+'</h4><p>'+c[2].trim()+'</p></div><span class="education-year">'+c[3].trim()+'</span></article>').join('')+'</div></div>';
+}
+module.exports={renderCareer,renderCommunity,renderEducation};

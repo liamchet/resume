@@ -7,9 +7,10 @@ const fs=require('fs');const path=require('path');const {build}=require('esbuild
  html=html.replace('<!-- REACT_BITS_BUNDLE -->',()=>'<style>'+css+'</style><script>'+js.split('</script').join('<'+String.fromCharCode(92)+'/script')+'</script>');
  const root=path.resolve(__dirname,'../..');
  const resume=fs.readFileSync(path.join(root,'dist','Liam_Chetrit_Resume.html'),'utf8');
- const {renderCareer,renderCommunity}=require('./career.cjs');
+ const {renderCareer,renderCommunity,renderEducation}=require('./career.cjs');
  html=html.replace('<!-- CAREER_FROM_RESUME -->',()=>renderCareer(resume));
  html=html.replace('<!-- COMMUNITY_FROM_RESUME -->',()=>renderCommunity(resume));
+ html=html.replace('<!-- EDUCATION_FROM_RESUME -->',()=>renderEducation(resume));
  for(const folder of [root,path.join(root,'dist')]){fs.mkdirSync(folder,{recursive:true});for(const name of ['index.html','Liam_Chetrit_Profile.html'])fs.writeFileSync(path.join(folder,name),html);}
  fs.writeFileSync(path.join(root,'dist','THIRD_PARTY_NOTICES.txt'),fs.readFileSync(path.join(__dirname,'components','LICENSE-React-Bits.md')));
  console.log('Built self-contained portfolio with React Bits; no runtime CDN.');
