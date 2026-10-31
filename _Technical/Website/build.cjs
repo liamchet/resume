@@ -1,6 +1,6 @@
 const fs=require('fs');const path=require('path');const {build}=require('esbuild');
 (async()=>{
- const result=await build({entryPoints:[path.join(__dirname,'islands.jsx')],bundle:true,write:false,outdir:path.join(__dirname,'build'),minify:true,format:'iife',jsx:'automatic',target:['es2020'],define:{'process.env.NODE_ENV':'"production"'},legalComments:'inline'});
+ const result=await build({nodePaths:process.env.PORTFOLIO_NODE_MODULES?[process.env.PORTFOLIO_NODE_MODULES]:[],entryPoints:[path.join(__dirname,'islands.jsx')],bundle:true,write:false,outdir:path.join(__dirname,'build'),minify:true,format:'iife',jsx:'automatic',target:['es2020'],define:{'process.env.NODE_ENV':'"production"'},legalComments:'inline'});
  const js=result.outputFiles.find(f=>f.path.endsWith('.js')).text;
  const css=result.outputFiles.find(f=>f.path.endsWith('.css')).text;
  let html=fs.readFileSync(path.join(__dirname,'profile.template.html'),'utf8');
