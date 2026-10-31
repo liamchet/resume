@@ -49,6 +49,17 @@ jobs:
             assert.equal(await page.locator('#motion-toggle').count(), 0);
             assert.match(await page.locator('h1').innerText(), /AI Solutions/);
             assert.equal(await page.locator('.flow-icon').count(), 12);
+            assert.equal(await page.locator('#career .career-company').count(),4);
+            assert.equal(await page.locator('#career .career-role').count(),8);
+            assert.equal(await page.locator('#community .career-role').count(),1);
+            const roleSummary=page.locator('#career .career-role > summary').first();
+            await roleSummary.focus();
+            await page.keyboard.press('Enter');
+            assert.ok(await page.locator('#career .career-role').first().getAttribute('open')!==null);
+            assert.equal(await page.locator('#career .career-role').first().locator('li').count(),4);
+            await page.keyboard.press('Space');
+            assert.equal(await page.locator('#career .career-role').first().getAttribute('open'),null);
+
             await page.locator('#gallery-pause').click();
             const startIndex=Number((await page.locator('#gallery-count').innerText()).slice(0,2));
             await page.locator('#gallery-next').click();
