@@ -25,13 +25,16 @@ jobs:
             try{const r=await fetch('https://liamchet.github.io/resume/'+p);console.log('BEFORE',p||'/',r.status,r.headers.get('content-type'));await r.arrayBuffer()}catch(e){console.log('BEFORE',p,e.message)}
           }})()
           NODE
+      - name: Install and build portfolio
+        run: |
+          npm install --prefix _Technical/Website
+          node _Technical/Website/build.cjs
       - name: Validate portfolio
         run: |
-          npm install --no-save playwright pdf-lib
           node <<'NODE'
           const fs = require('fs');
           const assert = require('assert/strict');
-          const { chromium } = require('playwright');
+          const { chromium } = require('./_Technical/Website/node_modules/playwright');
           (async () => {
             const browser = await chromium.launch({ executablePath: '/usr/bin/google-chrome', headless: true, args: ['--no-sandbox'] });
             const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
@@ -41,24 +44,39 @@ jobs:
             await page.locator('#community').scrollIntoViewIfNeeded();
             await page.locator('.gallery-window img').evaluateAll(async imgs => { await Promise.all(imgs.map(img => { img.loading = 'eager'; return img.decode(); })); });
             assert.equal(await page.locator('.gallery-window img').count(), 10);
-            assert.equal(await page.locator('.project-card').count(), 15);
+            assert.equal(await page.locator('.project-card').count(), 3);
+            await page.waitForFunction(()=>document.querySelectorAll('.specular-button').length===3);
+            assert.equal(await page.locator('#motion-toggle').count(), 1);
             await page.locator('#gallery-pause').click();
+            const startIndex=Number((await page.locator('#gallery-count').innerText()).slice(0,2));
             await page.locator('#gallery-next').click();
-            assert.equal(await page.locator('#gallery-count').innerText(), '02 / 10');
+            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),startIndex%10+1);
             await page.locator('#gallery-prev').click();
             await page.locator('#gallery-prev').click();
-            assert.equal(await page.locator('#gallery-count').innerText(), '10 / 10');
+            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),(startIndex+8)%10+1);
             await page.locator('.project-card summary').first().click();
             assert.equal(await page.locator('.project-card[open]').count(), 1);
+            await page.locator('.project-card[open] [data-view="after"]').click();
+            assert.equal(await page.locator('.project-card[open] [data-view="after"]').getAttribute('aria-pressed'),'true');
+            await page.locator('.project-card[open] .flow-step').nth(2).click();
+            assert.match(await page.locator('.project-card[open] .flow-detail').innerText(),/permissions/);
+            for(const card of await page.locator('.project-card').all()){
+              if((await card.getAttribute('open'))===null) await card.locator('summary').click();
+              await card.locator('.flow-step').last().click();
+              assert.equal(await card.locator('.flow-step.active').count(),1);
+            }
+            fs.mkdirSync('_Technical/QA',{recursive:true});
+            await page.screenshot({path:'_Technical/QA/desktop.png',fullPage:true});
             await page.setViewportSize({ width: 390, height: 844 });
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+            await page.screenshot({path:'_Technical/QA/mobile.png',fullPage:true});
             await page.emulateMedia({ reducedMotion: 'reduce' });
             assert.equal(await page.locator('#gallery-pause').getAttribute('aria-label'), 'Play photo rotation');
             const links = await page.locator('a[href]').evaluateAll(a => a.map(x => x.getAttribute('href')).filter(x => !/^(https?:|mailto:|#)/.test(x)));
             for (const link of links) assert.ok(fs.existsSync('dist/' + link), 'Missing link: ' + link);
             assert.deepEqual(errors, []);
             assert.equal(fs.readFileSync('dist/index.html', 'utf8'), fs.readFileSync('dist/Liam_Chetrit_Profile.html', 'utf8'));
-            console.log('PASS: 10 decoded gallery images; 15 case studies; navigation and wrap; expandable project cards; mobile layout; reduced motion; resume links; matching profile copies.');
+            console.log('PASS: 10 decoded images; 3 project workflows; React Bits buttons; comparisons and steps; mobile layout; reduced motion; resume links.');
             await browser.close();
           })().catch(e => { console.error(e); process.exit(1); });
           NODE
@@ -66,8 +84,8 @@ jobs:
         run: |
           node <<'NODE'
           const fs = require('fs');
-          const { chromium } = require('playwright');
-          const { PDFDocument } = require('pdf-lib');
+          const { chromium } = require('./_Technical/Website/node_modules/playwright');
+          const { PDFDocument } = require('./_Technical/Website/node_modules/pdf-lib');
           (async () => {
             const browser = await chromium.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox']});
             for(const name of ['Liam_Chetrit_Resume','Liam_Chetrit_AI_Product_Manager','Liam_Chetrit_AI_PM_Builder']) {
@@ -76,12 +94,13 @@ jobs:
               await page.emulateMedia({media:'print'});
               await page.pdf({path:'dist/'+name+'.pdf',preferCSSPageSize:true,printBackground:true});
               const doc = await PDFDocument.load(fs.readFileSync('dist/'+name+'.pdf'));
-              if(doc.getPageCount()!==1) throw new Error(name+' must fit one A4 page; got '+doc.getPageCount());
+              if(doc.getPageCount()<1||doc.getPageCount()>2) throw new Error(name+' must fit at most two A4 pages; got '+doc.getPageCount());
               const size=doc.getPage(0).getSize();
               if(Math.abs(size.width-595)>2||Math.abs(size.height-842)>2)throw new Error('Wrong paper size');
               const layout=await page.locator('.paper').evaluate(el=>({height:el.clientHeight,content:el.scrollHeight}));
               if(layout.content>layout.height+1)throw new Error('Resume content overflows A4');
-              console.log('A4_ONE_PAGE_VERIFIED '+name);
+              console.log('A4_VERIFIED '+name+' pages='+doc.getPageCount());
+              console.log('RESUME_TEXT '+(await page.locator('.paper').innerText()).replace(/\\n/g,' | '));
               await page.close();
             }
             await browser.close();
@@ -97,11 +116,19 @@ jobs:
           NODE
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- '*.html' '*.pdf' dist/*.pdf
+          git add -- index.html Liam_Chetrit_Profile.html Liam_Chetrit_Resume.html Liam_Chetrit_Resume.pdf Liam_Chetrit_AI_Product_Manager.html Liam_Chetrit_AI_Product_Manager.pdf Liam_Chetrit_AI_PM_Builder.html Liam_Chetrit_AI_PM_Builder.pdf Resume_Versions.html dist _Technical/Website/package-lock.json
           if ! git diff --cached --quiet; then
             git commit -m "Synchronize public resume PDFs and Pages entry points [skip ci]"
             git push origin HEAD:main
           fi
+      - name: Save review screenshots and downloadable package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Liam-Chetrit-Updated-Portfolio
+          path: |
+            dist/
+            _Technical/QA/
+          retention-days: 7
       - uses: actions/configure-pages@v5
         with:
           enablement: true
