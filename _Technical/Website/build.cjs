@@ -5,6 +5,8 @@ const fs=require('fs');const path=require('path');const {build}=require('esbuild
  const css=result.outputFiles.find(f=>f.path.endsWith('.css')).text;
  let html=fs.readFileSync(path.join(__dirname,'profile.template.html'),'utf8');
  html=html.replace('<!-- REACT_BITS_BUNDLE -->',()=>'<style>'+css+'</style><script>'+js.split('</script').join('<'+String.fromCharCode(92)+'/script')+'</script>');
+ html=html.replace('<!-- PROJECT_SHOWCASE -->',()=>require('./projects.cjs').renderProjects());
+ html=html.replace('<!-- PROJECT_PLAYER_SCRIPT -->',()=>'<style>'+fs.readFileSync(path.join(__dirname,'project-player.css'),'utf8')+'</style><script>'+fs.readFileSync(path.join(__dirname,'project-player.js'),'utf8')+'</script>');
  const root=path.resolve(__dirname,'../..');
  const resume=fs.readFileSync(path.join(root,'dist','Liam_Chetrit_Resume.html'),'utf8');
  const {renderCareer,renderCommunity,renderEducation}=require('./career.cjs');

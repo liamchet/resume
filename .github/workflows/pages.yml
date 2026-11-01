@@ -43,12 +43,12 @@ jobs:
             await page.goto('file://' + process.cwd() + '/dist/index.html');
             await page.locator('#community').scrollIntoViewIfNeeded();
             await page.locator('.gallery-window img').evaluateAll(async imgs => { await Promise.all(imgs.map(img => { img.loading = 'eager'; return img.decode(); })); });
-            assert.equal(await page.locator('.gallery-window img').count(), 10);
+            assert.equal(await page.locator('.gallery-window img').count(), 9);
             assert.equal(await page.locator('.project-card').count(), 3);
             await page.waitForFunction(()=>document.querySelectorAll('.specular-button').length===3);
             assert.equal(await page.locator('#motion-toggle').count(), 0);
             assert.match(await page.locator('h1').innerText(), /AI Solutions/);
-            assert.equal(await page.locator('.flow-icon').count(), 12);
+            assert.match(await page.locator('h1').innerText(),/Economist/);
             assert.equal(await page.locator('#career .career-company').count(),4);
             assert.equal(await page.locator('#career .career-role').count(),8);
             assert.equal(await page.locator('#community .career-role').count(),1);
@@ -66,20 +66,19 @@ jobs:
             await page.locator('#gallery-pause').click();
             const startIndex=Number((await page.locator('#gallery-count').innerText()).slice(0,2));
             await page.locator('#gallery-next').click();
-            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),startIndex%10+1);
+            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),startIndex%9+1);
             await page.locator('#gallery-prev').click();
             await page.locator('#gallery-prev').click();
-            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),(startIndex+8)%10+1);
-            await page.locator('.project-card summary').first().click();
-            assert.equal(await page.locator('.project-card[open]').count(), 1);
-            await page.locator('.project-card[open] [data-view="after"]').click();
-            assert.equal(await page.locator('.project-card[open] [data-view="after"]').getAttribute('aria-pressed'),'true');
-            await page.locator('.project-card[open] .flow-step').nth(2).click();
-            assert.match(await page.locator('.project-card[open] .flow-detail').innerText(),/permissions/);
-            for(const card of await page.locator('.project-card').all()){
-              if((await card.getAttribute('open'))===null) await card.locator('summary').click();
-              await card.locator('.flow-step').last().click();
-              assert.equal(await card.locator('.flow-step.active').count(),1);
+            assert.equal(Number((await page.locator('#gallery-count').innerText()).slice(0,2)),(startIndex+7)%9+1);
+            for(const card of await page.locator('.project-launch').all()){
+              await card.click();
+              assert.equal(await page.locator('#project-dialog:modal').count(),1);
+              assert.equal(await page.locator('.project-brief>div').count(),5);
+              assert.equal(await page.locator('.journey-step').count(),4);
+              await page.locator('.journey-step').last().click();
+              assert.equal(await page.locator('.journey-step[aria-pressed="true"]').count(),1);
+              await page.keyboard.press('Escape');
+              assert.equal(await page.locator('#project-dialog:modal').count(),0);
             }
             fs.mkdirSync('_Technical/QA',{recursive:true});
             await page.screenshot({path:'_Technical/QA/desktop.png',fullPage:true});
@@ -92,7 +91,7 @@ jobs:
             for (const link of links) assert.ok(fs.existsSync('dist/' + link), 'Missing link: ' + link);
             assert.deepEqual(errors, []);
             assert.equal(fs.readFileSync('dist/index.html', 'utf8'), fs.readFileSync('dist/Liam_Chetrit_Profile.html', 'utf8'));
-            console.log('PASS: 10 decoded images; 3 project workflows; React Bits buttons; comparisons and steps; mobile layout; reduced motion; resume links.');
+            console.log('PASS: 9 decoded gallery images; 3 project dialogs; resume-backed career and education; motion preferences; resume links.');
             await browser.close();
           })().catch(e => { console.error(e); process.exit(1); });
           NODE
