@@ -1,96 +1,276 @@
 [
   {
     "id": "service",
-    "name": "Customer & Employee AI",
-    "short": "Self-service, service teams and internal operations.",
-    "problem": "Repeated inquiries and fragmented policy information consume service time.",
-    "role": "Own portfolio strategy, discovery and delivery across business and AI teams.",
-    "vision": "Resolve routine needs digitally; give people the context for complex cases.",
+    "name": "Conversational Service AI",
+    "short": "Guided conversations for coverage, service and employee knowledge.",
+    "problem": "Broad questions and one-off answers leave people searching for the next step.",
+    "role": "Sole product manager, owning discovery, customer collaboration, requirements, development coordination and rollout.",
+    "vision": "Help people reach a useful, contextual answer through a guided conversation.",
     "kpis": "Target: 10% lower handling time · Cost per resolution · Handoffs",
-    "outcome": "Portfolio ownership and assistant iteration. The 10% reduction is a future target.",
+    "outcome": "Product scope: intent recognition, clarification, grounded answers and relevant follow-ups. Savings remain targets.",
     "stages": [
-      "A question arrives",
-      "Authorized context",
-      "Grounded assistance",
-      "Resolve or hand off"
+      "Understand intent",
+      "Clarify the need",
+      "Answer with context",
+      "Guide the next step"
     ],
     "details": [
-      "A customer or employee asks a service question.",
-      "The journey selects relevant policy and knowledge sources with permissions.",
-      "An assistant prepares a source-grounded answer or guidance.",
-      "A person handles exceptions with context rather than repeating the search."
+      "Recognize a clear question, a broad request or an opening greeting, while retaining the conversation context.",
+      "Use concise clarification choices to narrow the topic before presenting a detailed answer.",
+      "Provide a focused answer grounded in authorized policy or knowledge content, with a path to the relevant source.",
+      "Offer relevant follow-up questions, or guide the person to an appropriate service route when more support is needed."
     ],
     "input": [
-      "Customer question",
-      "Policy knowledge"
+      "A broad question",
+      "Conversation context"
     ],
     "output": [
-      "Relevant answer",
-      "Context for service team"
+      "A focused answer",
+      "A useful next action"
     ],
     "icons": [
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 5h22v16H14l-7 6v-6H5z\"/><path d=\"M10 11h12M10 15h8\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h9l3 4h10v14H5zM5 9V5h9l3 4h10v4\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 3l11 5v8c0 7-11 13-11 13S5 23 5 16V8zM11 16l4 4 7-8\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 16h22M20 9l7 7-7 7\"/></svg>"
+    ],
+    "scenes": [
+      {
+        "input": [
+          [
+            "Customer question",
+            "A broad coverage topic"
+          ],
+          [
+            "Context",
+            "Conversation begins"
+          ]
+        ],
+        "output": [
+          [
+            "Intent",
+            "Clarification needed"
+          ],
+          [
+            "Next action",
+            "Offer topic choices"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Choose a topic",
+            "Benefit / process / document"
+          ],
+          [
+            "Context",
+            "Previous question retained"
+          ]
+        ],
+        "output": [
+          [
+            "Need",
+            "More focused"
+          ],
+          [
+            "Next action",
+            "Find relevant content"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Knowledge",
+            "Relevant source selected"
+          ],
+          [
+            "Context",
+            "Authorized content only"
+          ]
+        ],
+        "output": [
+          [
+            "Answer",
+            "Concise and focused"
+          ],
+          [
+            "Evidence",
+            "Source link available"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Conversation",
+            "A contextual answer"
+          ],
+          [
+            "Options",
+            "Related next questions"
+          ]
+        ],
+        "output": [
+          [
+            "Continue",
+            "Follow-up selected"
+          ],
+          [
+            "Support",
+            "Guide to service if needed"
+          ]
+        ]
+      }
     ]
   },
   {
     "id": "underwriting",
     "name": "Digital Underwriting",
-    "short": "Medical information, green paths and reinsurance.",
-    "problem": "Manual medical-file review and fragmented checks delay underwriting.",
-    "role": "Lead end-to-end product definition, stakeholder alignment and integration scope.",
-    "vision": "Green paths for eligible cases; expert review for exceptions.",
+    "short": "Green-path screening and source-linked medical profiles.",
+    "problem": "Routine referrals and fragmented medical information increase manual underwriting work.",
+    "role": "Sole product manager across discovery, requirements, customers, development coordination, integrations and rollout.",
+    "vision": "Two connected capabilities: consistent eligibility screening and a traceable medical workspace for expert review.",
     "kpis": "Target: ~40% less manual effort · Green-path rate · Quality",
-    "outcome": "Product definition and evaluation. The 40% reduction is a planned target.",
+    "outcome": "Product scope: screening, medical profiles, missing-information review and decision support. The ~40% effort reduction remains a target.",
     "stages": [
-      "Medical information",
-      "Structured review",
-      "Route the case",
-      "Underwriting decision"
+      "Screen the application",
+      "Build the medical story",
+      "Complete and validate",
+      "Route for a decision"
     ],
     "details": [
-      "Collect questionnaires and medical documents for the application.",
-      "Build a source-linked profile and identify missing evidence.",
-      "Evaluate green-path eligibility and reinsurance integration requirements.",
-      "Route exceptions to an underwriter; keep professional accountability."
+      "Use a defined eligibility check to distinguish routine applications from those needing expert attention. An unfamiliar or incomplete case follows the review route.",
+      "Check document relevance, duplication and readability; organize findings into diagnoses, linked events and a medical timeline with source references.",
+      "Identify missing supporting information and prepare relevant measurements for underwriting tools. Allow authorized reviewers to validate, edit and provide feedback.",
+      "Eligible routine cases can follow a green path subject to the required checks. Exceptions and unresolved information are routed to an underwriter with context."
     ],
     "input": [
-      "Medical records",
-      "Application"
+      "Application information",
+      "Relevant medical sources"
     ],
     "output": [
-      "Eligible green path",
-      "Expert exception review"
+      "Eligible routine route",
+      "Expert review with context"
     ],
     "icons": [
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h11l6 6v20H8zM19 3v7h6M16 23V14m-4 4 4-4 4 4\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h16v26H8zM12 10h8M12 16h8M12 22h5\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 4L2 28h28zM16 12v7M16 23v1\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"13\" cy=\"10\" r=\"5\"/><path d=\"M3 28v-4a10 10 0 0 1 18-6M21 25l3 3 6-8\"/></svg>"
+    ],
+    "scenes": [
+      {
+        "input": [
+          [
+            "Application",
+            "Relevant declarations"
+          ],
+          [
+            "Eligibility check",
+            "Consistent screening"
+          ]
+        ],
+        "output": [
+          [
+            "Routine path",
+            "Continue required checks"
+          ],
+          [
+            "Exception",
+            "Underwriter review"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Documents",
+            "Relevance / quality / duplicates"
+          ],
+          [
+            "Evidence",
+            "Source-linked findings"
+          ]
+        ],
+        "output": [
+          [
+            "Profile",
+            "Diagnoses and events"
+          ],
+          [
+            "Timeline",
+            "Medical history in context"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Information",
+            "Missing supporting evidence"
+          ],
+          [
+            "Measurements",
+            "Structured review inputs"
+          ]
+        ],
+        "output": [
+          [
+            "Completion",
+            "Request missing information"
+          ],
+          [
+            "Reviewer",
+            "Validate and correct"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Case status",
+            "Screening and evidence"
+          ],
+          [
+            "Checks",
+            "Unresolved issues reviewed"
+          ]
+        ],
+        "output": [
+          [
+            "Green path",
+            "Eligible routine case"
+          ],
+          [
+            "Expert route",
+            "Exceptions and uncertainty"
+          ]
+        ]
+      }
     ]
   },
   {
     "id": "claims",
     "name": "Claims Decision Support",
-    "short": "Medical and legal evidence in one review flow.",
-    "problem": "Claims handlers rebuild case context across medical and legal documents.",
-    "role": "Lead discovery and product definition; build the interactive prototype.",
-    "vision": "Less preparation effort and more time for professional assessment.",
+    "short": "Medical and legal evidence for better-informed case assessment.",
+    "problem": "Claims handlers reconstruct complex medical and legal histories before assessing the case.",
+    "role": "Sole product manager, owning business discovery, customer needs, product definition, development coordination and rollout.",
+    "vision": "A consistent evidence-led workspace, from case understanding to informed professional assessment.",
     "kpis": "Target: 20% less preparation & review effort · Source completeness",
-    "outcome": "Interactive prototype and roadmap. The 20% reduction is a future target.",
+    "outcome": "Product scope: structured case summaries, evidence review and a roadmap for decision support. The 20% effort reduction remains a target.",
     "stages": [
-      "Case evidence",
-      "Case summary",
-      "Compare findings",
-      "Professional review"
+      "Organize case evidence",
+      "Create a case brief",
+      "Review and compare",
+      "Support assessment"
     ],
     "details": [
-      "Bring medical records, judgments and expert opinions into the case.",
-      "Prepare a claimant profile and source-linked summary.",
-      "Connect findings and identify evidence requiring investigation.",
-      "A claims handler assesses the case with source context and retains the decision."
+      "Bring the relevant medical records, expert opinions and legal materials into one case view, keeping the source of each finding visible.",
+      "Prepare a consistent medical and case summary that helps a claims handler understand the history without repeatedly rebuilding the file.",
+      "Highlight information requiring attention and support comparison with relevant professional knowledge and historical cases.",
+      "Connect the case brief to professional assessment and the decision-support roadmap. Recommendations require validation; the claims professional retains the decision."
     ],
     "input": [
       "Medical evidence",
@@ -105,6 +285,96 @@
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 3h18v26H7zM11 9h10M11 15h10M11 21h6\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 6h10v20H3zM19 6h10v20H19zM13 16h6M16 13l3 3-3 3\"/></svg>",
       "<svg class=\"flow-icon\" viewBox=\"0 0 32 32\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"10\" r=\"5\"/><path d=\"M2 28v-4a10 10 0 0 1 18-6M21 25l3 3 6-8\"/></svg>"
+    ],
+    "scenes": [
+      {
+        "input": [
+          [
+            "Medical evidence",
+            "Records and expert opinions"
+          ],
+          [
+            "Legal context",
+            "Relevant case materials"
+          ]
+        ],
+        "output": [
+          [
+            "Case view",
+            "Evidence organized"
+          ],
+          [
+            "Sources",
+            "Findings remain traceable"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "History",
+            "Events in context"
+          ],
+          [
+            "Key findings",
+            "Relevant evidence"
+          ]
+        ],
+        "output": [
+          [
+            "Case brief",
+            "Consistent summary"
+          ],
+          [
+            "Review",
+            "Direct links to sources"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Review queue",
+            "Gaps or conflicting evidence"
+          ],
+          [
+            "Comparison",
+            "Relevant prior knowledge"
+          ]
+        ],
+        "output": [
+          [
+            "Attention",
+            "Items for investigation"
+          ],
+          [
+            "Reviewer",
+            "Validate the interpretation"
+          ]
+        ]
+      },
+      {
+        "input": [
+          [
+            "Case brief",
+            "Medical and legal context"
+          ],
+          [
+            "Assessment",
+            "Professional review"
+          ]
+        ],
+        "output": [
+          [
+            "Decision support",
+            "Validated insights"
+          ],
+          [
+            "Accountability",
+            "Human decision retained"
+          ]
+        ]
+      }
     ]
   }
 ]

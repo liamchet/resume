@@ -8,3 +8,5 @@
 @media(prefers-reduced-motion:reduce){.is-playing .signal-line:after,.is-playing .core-orbit{animation:none}.project-launch:hover{transform:none}}
 
 .project-dialog-header{position:sticky;top:-32px;z-index:4;background:#0b192c;padding:4px 0 14px}@media(max-width:600px){.project-dialog-header{top:-22px}}
+
+.scene-copy{display:block;min-width:0}.scene-copy small{display:block;color:var(--blue);font-size:10px;line-height:1.4;margin-bottom:6px;letter-spacing:.025em}.scene-copy strong{display:block;font-size:12px;line-height:1.5;font-weight:500;color:var(--paper)}.simulation-document,.simulation-result{transition:background .3s,border-color .3s;min-height:76px}.simulation-document{border-left:2px solid var(--red)}.simulation-result{border-left:2px solid var(--blue)}@media(max-width:600px){.scene-copy strong{font-size:11px}.scene-copy small{font-size:9px}.simulation-document,.simulation-result{min-height:86px;align-items:flex-start}.simulation-canvas{padding:18px 0}}@media(prefers-reduced-motion:reduce){.simulation-document,.simulation-result{transition:none}}

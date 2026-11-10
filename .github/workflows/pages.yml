@@ -77,6 +77,12 @@ jobs:
               assert.equal(await page.locator('.journey-step').count(),4);
               await page.locator('.journey-step').last().click();
               assert.equal(await page.locator('.journey-step[aria-pressed="true"]').count(),1);
+              assert.equal(await page.locator('.scene-copy').count(),4);
+              assert.match(await page.locator('.project-brief').innerText(),/Sole product manager/);
+              const finalScene=await page.locator('.simulation-input').innerText();
+              await page.locator('.journey-step').first().click();
+              assert.notEqual(await page.locator('.simulation-input').innerText(),finalScene);
+              assert.doesNotMatch(await page.locator('.project-brief').innerText(),/live in production|deployed predictive model/i);
               await page.keyboard.press('Escape');
               assert.equal(await page.locator('#project-dialog:modal').count(),0);
             }
